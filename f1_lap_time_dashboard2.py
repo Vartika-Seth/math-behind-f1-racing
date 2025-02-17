@@ -1,70 +1,52 @@
-import streamlit as st
-import matplotlib.pyplot as plt
-from PIL import Image
+import numpy as np
+from matplotlib.animation import FuncAnimation
 
-# Load F1 background image
-bg_image = Image.open('f1_image1.jpeg')
-
-# Set Background Image in the Header
-st.image(bg_image, use_column_width=True)
-st.markdown("<h1 style='text-align: center; color: red;'>Math Behind F1 Racing: The Fastest Lap</h1>", unsafe_allow_html=True)
-st.markdown("<p style='text-align: center; color: gray;'>Explore how speed, acceleration, and braking impact lap times!</p>", unsafe_allow_html=True)
-
-# Sidebar for User Inputs
-st.sidebar.header("Adjust Parameters:")
-track_length = st.sidebar.slider("Track Length (meters)", 3000, 7000, 5000)
-avg_speed_kmh = st.sidebar.slider("Average Speed (km/h)", 150, 350, 250)
-acceleration = st.sidebar.slider("Acceleration (m/s²)", 2.0, 6.0, 4.0)
-braking = st.sidebar.slider("Braking (m/s²)", 4.0, 8.0, 6.0)
-
-# Convert km/h to m/s
-avg_speed_ms = avg_speed_kmh * (1000 / 3600)
-
-# Time to reach max speed
-t_accel = avg_speed_ms / acceleration  
-s_accel = 0.5 * acceleration * t_accel**2  
-
-# Braking distance (before a turn)
-s_braking = (avg_speed_ms**2) / (2 * braking)  
-
-# Remaining track distance for steady speed
-s_constant = track_length - (s_accel + s_braking)  
-t_constant = s_constant / avg_speed_ms  
-
-# Time for braking phase
-t_braking = avg_speed_ms / braking  
-
-# Total Lap Time
-lap_time = t_accel + t_constant + t_braking
-
-# Display Results with Styling
-st.markdown("<h2 style='color: red;'>Estimated Lap Time:</h2>", unsafe_allow_html=True)
-st.markdown(f"<h1 style='color: black;'>{lap_time:.2f} seconds</h1>", unsafe_allow_html=True)
-
-# Visualization Data
-time_points = [0, t_accel, t_accel + t_constant, lap_time]
-speed_points = [0, avg_speed_ms, avg_speed_ms, 0]
-distance_points = [0, s_accel, s_accel + s_constant, track_length]
-
-# Speed vs. Time Plot
+# Animation for Speed vs. Time
 fig1, ax1 = plt.subplots()
-ax1.plot(time_points, speed_points, label='Speed (m/s)', color='red', marker='o')
-ax1.set_title('Speed vs. Time')
-ax1.set_xlabel('Time (seconds)')
-ax1.set_ylabel('Speed (m/s)')
-ax1.grid(True, linestyle='--', alpha=0.7)
+line1, = ax1.plot([], [], color='#FF5757', marker='o', label='Speed (m/s)')
+ax1.set_title('Speed vs. Time', color='white')
+ax1.set_xlabel('Time (seconds)', color='white')
+ax1.set_ylabel('Speed (m/s)', color='white')
+ax1.grid(True, linestyle='--', alpha=0.5)
 ax1.legend()
+ax1.tick_params(colors='white')
+fig1.patch.set_alpha(0)
+ax1.set_facecolor('black')
+
+def animate_speed(i):
+    ax1.clear()
+    ax1.plot(time_points[:i+1], speed_points[:i+1], color='#FF5757', marker='o')
+    ax1.set_title('Speed vs. Time', color='white')
+    ax1.set_xlabel('Time (seconds)', color='white')
+    ax1.set_ylabel('Speed (m/s)', color='white')
+    ax1.grid(True, linestyle='--', alpha=0.5)
+    ax1.tick_params(colors='white')
+    ax1.set_facecolor('black')
+
+ani_speed = FuncAnimation(fig1, animate_speed, frames=len(time_points), interval=500)
 st.pyplot(fig1)
 
-# Distance vs. Time Plot
+# Animation for Distance vs. Time
 fig2, ax2 = plt.subplots()
-ax2.plot(time_points, distance_points, label='Distance (m)', color='blue', marker='o')
-ax2.set_title('Distance vs. Time')
-ax2.set_xlabel('Time (seconds)')
-ax2.set_ylabel('Distance (m)')
-ax2.grid(True, linestyle='--', alpha=0.7)
+line2, = ax2.plot([], [], color='#FFF700', marker='o', label='Distance (m)')
+ax2.set_title('Distance vs. Time', color='white')
+ax2.set_xlabel('Time (seconds)', color='white')
+ax2.set_ylabel('Distance (m)', color='white')
+ax2.grid(True, linestyle='--', alpha=0.5)
 ax2.legend()
-st.pyplot(fig2)
+ax2.tick_params(colors='white')
+fig2.patch.set_alpha(0)
+ax2.set_facecolor('black')
 
-st.markdown("<hr>", unsafe_allow_html=True)
-st.markdown("<p style='text-align: center; color: gray;'>🏎️ Adjust the sliders and see how lap times change in real-time!</p>", unsafe_allow_html=True)
+def animate_distance(i):
+    ax2.clear()
+    ax2.plot(time_points[:i+1], distance_points[:i+1], color='#FFF700', marker='o')
+    ax2.set_title('Distance vs. Time', color='white')
+    ax2.set_xlabel('Time (seconds)', color='white')
+    ax2.set_ylabel('Distance (m)', color='white')
+    ax2.grid(True, linestyle='--', alpha=0.5)
+    ax2.tick_params(colors='white')
+    ax2.set_facecolor('black')
+
+ani_distance = FuncAnimation(fig2, animate_distance, frames=len(time_points), interval=500)
+st.pyplot(fig2)
