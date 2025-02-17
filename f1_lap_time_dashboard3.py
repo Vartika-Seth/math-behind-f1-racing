@@ -1,49 +1,18 @@
 import streamlit as st
 import matplotlib.pyplot as plt
-from PIL import Image
-
-# Load and Display Background Image
-
-
-# Custom CSS for Transparent Containers
-st.markdown("""
-    <style>
-    body {
-        background: url('f1_bg.jpg') no-repeat center center fixed; background-size: cover;
-        background-size: cover;
-        background-attachment: fixed;
-    }
-    .stApp {
-        background: transparent;
-    }
-    .reportview-container .main .block-container{
-        background: rgba(0, 0, 0, 0.5);
-        border-radius: 15px;
-        padding: 25px;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
-        background: rgba(0, 0, 0, 0.6);
-        padding: 20px;
-        border-radius: 10px;
-    }
-    h1, h2, h3, h4, h5, h6, p, label {
-        color: white;
-    }
-    </style>
-    """, unsafe_allow_html=True)
 
 # Title and Description
 st.title("Math Behind F1 Racing: The Fastest Lap")
 st.markdown("""
-This interactive dashboard calculates the **fastest lap time** using mathematical models.  
-**Adjust the inputs** below to see how it impacts lap times!
+This interactive dashboard calculates the **fastest lap time** using mathematical models.
+Adjust the inputs below and see how it impacts lap times!
 """)
 
-# Sidebar for User Inputs
-st.sidebar.header("Adjust Parameters:")
-track_length = st.sidebar.slider("Track Length (meters)", 3000, 7000, 5000)
-avg_speed_kmh = st.sidebar.slider("Average Speed (km/h)", 150, 350, 250)
-acceleration = st.sidebar.slider("Acceleration (m/s²)", 2.0, 6.0, 4.0)
-braking = st.sidebar.slider("Braking (m/s²)", 4.0, 8.0, 6.0)
+# User Inputs
+track_length = st.slider("Track Length (meters)", 3000, 7000, 5000)
+avg_speed_kmh = st.slider("Average Speed (km/h)", 150, 350, 250)
+acceleration = st.slider("Acceleration (m/s²)", 2.0, 6.0, 4.0)
+braking = st.slider("Braking (m/s²)", 4.0, 8.0, 6.0)
 
 # Convert km/h to m/s
 avg_speed_ms = avg_speed_kmh * (1000 / 3600)
@@ -65,9 +34,9 @@ t_braking = avg_speed_ms / braking
 # Total Lap Time
 lap_time = t_accel + t_constant + t_braking
 
-# Display Results with Styling
-st.markdown("<h2 style='color: #FF5757;'>Estimated Lap Time:</h2>", unsafe_allow_html=True)
-st.markdown(f"<h1 style='color: #FFF700;'>{lap_time:.2f} seconds</h1>", unsafe_allow_html=True)
+# Display Results
+st.subheader("Estimated Lap Time:")
+st.write(f"**{lap_time:.2f} seconds**")
 
 # Visualization Data
 time_points = [0, t_accel, t_accel + t_constant, lap_time]
@@ -76,31 +45,26 @@ distance_points = [0, s_accel, s_accel + s_constant, track_length]
 
 # Speed vs. Time Plot
 fig1, ax1 = plt.subplots()
-ax1.plot(time_points, speed_points, label='Speed (m/s)', color='#FF5757', marker='o')
-ax1.set_title('Speed vs. Time', color='white')
-ax1.set_xlabel('Time (seconds)', color='white')
-ax1.set_ylabel('Speed (m/s)', color='white')
-ax1.grid(True, linestyle='--', alpha=0.5)
+ax1.plot(time_points, speed_points, label='Speed (m/s)', color='red', marker='o')
+ax1.set_title('Speed vs. Time')
+ax1.set_xlabel('Time (seconds)')
+ax1.set_ylabel('Speed (m/s)')
+ax1.grid(True)
 ax1.legend()
-ax1.tick_params(colors='white')
-fig1.patch.set_alpha(0.85)
-ax1.set_facecolor('black')
-st.markdown("<h3 style='color: #FF5757;'>Speed vs. Time</h3>", unsafe_allow_html=True)
 st.pyplot(fig1)
 
 # Distance vs. Time Plot
 fig2, ax2 = plt.subplots()
-ax2.plot(time_points, distance_points, label='Distance (m)', color='#FFF700', marker='o')
-ax2.set_title('Distance vs. Time', color='white')
-ax2.set_xlabel('Time (seconds)', color='white')
-ax2.set_ylabel('Distance (m)', color='white')
-ax2.grid(True, linestyle='--', alpha=0.5)
+ax2.plot(time_points, distance_points, label='Distance (m)', color='blue', marker='o')
+ax2.set_title('Distance vs. Time')
+ax2.set_xlabel('Time (seconds)')
+ax2.set_ylabel('Distance (m)')
+ax2.grid(True)
 ax2.legend()
-ax2.tick_params(colors='white')
-fig2.patch.set_alpha(0.85)
-ax2.set_facecolor('black')
-st.markdown("<h3 style='color: #FFF700;'>Distance vs. Time</h3>", unsafe_allow_html=True)
 st.pyplot(fig2)
 
-st.markdown("<hr>", unsafe_allow_html=True)
-st.markdown("<p style='text-align: center; color: #FFF700;'>🏎️ Adjust the sliders and see how lap times change in real-time!</p>", unsafe_allow_html=True)
+st.markdown("""
+---
+**Explore different scenarios by changing the inputs above!**  
+Notice how acceleration and braking affect the overall lap time.
+""")
