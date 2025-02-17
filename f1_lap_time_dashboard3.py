@@ -33,7 +33,17 @@ This interactive dashboard calculates the **fastest lap time** using mathematica
 
 # Sidebar for User Inputs
 st.sidebar.header("Adjust Parameters:")
-track_length = st.sidebar.slider("Track Length (meters)", 3000, 7000, 5000)
+# Track Selection with Preset Lengths
+track_options = {
+    "Monaco": 3337,
+    "Silverstone": 5891,
+    "Monza": 5793,
+    "Spa-Francorchamps": 7004,
+    "Yas Marina": 5581
+}
+selected_track = st.sidebar.selectbox("Choose Track:", list(track_options.keys()))
+track_length = track_options[selected_track]
+st.sidebar.write(f"Track Length: {track_length} meters")
 avg_speed_kmh = st.sidebar.slider("Average Speed (km/h)", 150, 350, 250)
 acceleration = st.sidebar.slider("Acceleration (m/s²)", 2.0, 6.0, 4.0)
 braking = st.sidebar.slider("Braking (m/s²)", 4.0, 8.0, 6.0)
