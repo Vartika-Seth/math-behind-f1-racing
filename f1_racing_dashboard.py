@@ -63,7 +63,7 @@ if st.sidebar.button("🏁 Simulate Lap"):
     lap_time_placeholder.write(f"🏎️ **Predicted Lap Time:** {predicted_time} seconds")
 
     # Display selected track layout
-    st.image(track_layouts[track], caption=f"{track} Circuit Layout", use_column_width=True)
+    st.image(track_layouts[track], caption=f"{track} Circuit Layout", use_container_width=True)
 
     # Run Lap Animation
     animate_lap(predicted_time, track)
