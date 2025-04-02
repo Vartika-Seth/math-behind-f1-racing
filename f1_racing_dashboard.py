@@ -80,13 +80,6 @@ weather = st.sidebar.selectbox("Weather Conditions", ["Sunny", "Cloudy", "Wet"])
 # Placeholder for Lap Time Prediction
 lap_time_placeholder = st.empty()
 
-# --- Predict Lap Time When Button is Clicked ---
-if st.sidebar.button("Simulate Lap"):
-    predicted_time = predict_lap_time(fuel_load, tire_wear, weather, track)
-    lap_time_placeholder.write(f"🏁 **Predicted Lap Time:** {predicted_time} seconds")
-
-    # Run the animation
-    animate_lap(predicted_time)
 
 # Custom CSS for Full Background Image and Transparent Containers
 st.markdown("""
@@ -116,20 +109,56 @@ import time
 def animate_lap(predicted_time):
     st.subheader("🏎️ Lap Simulation")
 
-    # Simulated track (Circle Path for Simplicity)
-    theta = np.linspace(0, 2 * np.pi, 100)
-    x = np.cos(theta)
-    y = np.sin(theta)
+  # Simplified Track Coordinates (X, Y) for Visualization
+track_layouts = {
+    "Monza": {
+        "x": [0, 1, 2, 2, 1, 0, -1, -2, -2, -1, 0],
+        "y": [0, 1, 1.5, 2, 2.5, 3, 2.5, 2, 1.5, 1, 0]
+    },
+    "Silverstone": {
+        "x": [0, 1, 1.5, 2, 1.8, 1.3, 0.8, 0.5, -0.5, -1, -1.5, -2, -1.5, -1, 0],
+        "y": [0, 1, 1.2, 1.5, 1.8, 2, 2.2, 2.4, 2.5, 2.3, 2, 1.5, 1, 0.5, 0]
+    },
+    "Spa": {
+        "x": [0, 1, 1.2, 1.5, 1.3, 1, 0.5, 0, -0.5, -1, -1.2, -1.5, -1.3, -1, 0],
+        "y": [0, 1, 1.3, 1.7, 2, 2.3, 2.5, 2.6, 2.5, 2.3, 2, 1.7, 1.3, 1, 0]
+    },
+    "Suzuka": {
+        "x": [0, 1, 2, 2.5, 2, 1.5, 1, 0.5, -0.5, -1, -1.5, -2, -2.5, -2, -1, 0],
+        "y": [0, 0.5, 1, 1.5, 2, 2.2, 2.4, 2.6, 2.6, 2.4, 2.2, 2, 1.5, 1, 0.5, 0]
+    }
+}
+import numpy as np
+import matplotlib.pyplot as plt
+import time
+import streamlit as st
+
+# --- Function to Animate a Lap on Real Track Layout ---
+def animate_lap(predicted_time, track):
+    st.subheader(f"🏎️ Lap Simulation on {track}")
+
+    track_data = track_layouts[track]
+    x = np.array(track_data["x"])
+    y = np.array(track_data["y"])
 
     fig, ax = plt.subplots()
     ax.plot(x, y, 'gray', linewidth=2)  # Track outline
     car_dot, = ax.plot([], [], 'ro', markersize=8)  # Red dot = F1 Car
 
-    ax.set_xlim(-1.2, 1.2)
-    ax.set_ylim(-1.2, 1.2)
+    ax.set_xlim(min(x) - 1, max(x) + 1)
+    ax.set_ylim(min(y) - 1, max(y) + 1)
     ax.set_xticks([])
     ax.set_yticks([])
-    ax.set_title("Lap Simulation")
+    ax.set_title(f"Lap Simulation - {track}")
+
+    # Show animation frame by frame
+    frame_time = predicted_time / len(x)  # Adjust speed based on lap time
+    for i in range(len(x)):
+        car_dot.set_data(x[i], y[i])
+        ax.figure.canvas.draw()
+        time.sleep(frame_time / 10)  # Adjust animation speed
+        st.pyplot(fig)
+
 
     # Show animation frame by frame
     frame_time = predicted_time / len(theta)  # Adjust speed based on lap time
@@ -139,9 +168,15 @@ def animate_lap(predicted_time):
         time.sleep(frame_time / 10)  # Reduce time for Streamlit compatibility
         st.pyplot(fig)
 
+# --- Predict Lap Time When Button is Clicked ---
+if st.sidebar.button("Simulate Lap"):
+    predicted_time = predict_lap_time(fuel_load, tire_wear, weather, track)
+    lap_time_placeholder.write(f"🏁 **Predicted Lap Time:** {predicted_time} seconds")
+
+    # Run the new track animation
+    animate_lap(predicted_time, track)
 
 # Title and Description
-st.title("Math Behind F1 Racing: The Fastest Lap")
 st.markdown("""
 This interactive dashboard calculates the **fastest lap time** using mathematical models.  
 **Choose a track and adjust parameters below!**
@@ -184,26 +219,7 @@ st.markdown("<h2 style='color: #FF5757;'>Estimated Lap Time:</h2>", unsafe_allow
 st.markdown(f"<h1 style='color: #FFF700;'>{lap_time:.2f} seconds</h1>", unsafe_allow_html=True)
 
 # **Animation of Lap Simulation**
-num_frames = 100
 
-def generate_track_shape(track_shape):
-    if track_shape == "oval":
-        theta = np.linspace(0, 2 * np.pi, num_frames)
-        x = 100 * np.cos(theta)
-        y = 50 * np.sin(theta)
-    elif track_shape == "zigzag":
-        x = np.linspace(-100, 100, num_frames)
-        y = np.sign(np.sin(x / 20)) * 50
-    elif track_shape == "circuit":
-        theta = np.linspace(0, 2 * np.pi, num_frames)
-        x = 80 * np.cos(theta) + np.random.uniform(-10, 10, num_frames)
-        y = 80 * np.sin(theta) + np.random.uniform(-10, 10, num_frames)
-    elif track_shape == "complex":
-        x = np.linspace(-100, 100, num_frames)
-        y = np.sin(x / 10) * 50 + np.random.uniform(-10, 10, num_frames)
-    return x, y
-
-x_track, y_track = generate_track_shape(track_shape)
 
 def animate(i):
     ax.clear()
