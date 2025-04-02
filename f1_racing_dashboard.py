@@ -54,9 +54,37 @@ st.write("🏎️ Lap animation will be displayed here.")
 st.subheader("🛠️ Pit Stop Impact Calculator (Coming Soon)")
 st.write("⏱️ Graph showing time lost/gained due to pit stops.")
 
-# --- RUN THE APP ---
-# Save this file as `f1_dashboard.py` and run:
-# streamlit run f1_dashboard.py
+# --- Function to Predict Lap Time ---
+def predict_lap_time(fuel_load, tire_wear, weather, track):
+    base_time = {"Monza": 80.0, "Silverstone": 90.0, "Spa": 100.0, "Suzuka": 95.0}
+    lap_time = base_time[track] + (fuel_load * 0.1) + (tire_wear * 0.2)
+
+    # Weather impact
+    if weather == "Wet":
+        lap_time += 5
+    elif weather == "Cloudy":
+        lap_time += 2
+    
+    return round(lap_time, 2)
+
+# --- Dashboard UI ---
+st.title("🏎️ F1 Racing Dashboard – Fastest Lap Calculator")
+
+# Sidebar Inputs
+st.sidebar.header("🔧 Simulation Settings")
+track = st.sidebar.selectbox("Select Track", ["Monza", "Silverstone", "Spa", "Suzuka"])
+fuel_load = st.sidebar.slider("Fuel Load (kg)", min_value=10, max_value=110, step=5, value=50)
+tire_wear = st.sidebar.slider("Tire Wear (%)", min_value=0, max_value=100, step=5, value=20)
+weather = st.sidebar.selectbox("Weather Conditions", ["Sunny", "Cloudy", "Wet"])
+
+# Placeholder for Lap Time Prediction
+lap_time_placeholder = st.empty()
+
+# --- Predict Lap Time When Button is Clicked ---
+if st.sidebar.button("Simulate Lap"):
+    predicted_time = predict_lap_time(fuel_load, tire_wear, weather, track)
+    lap_time_placeholder.write(f"🏁 **Predicted Lap Time:** {predicted_time} seconds")
+
 
 # Custom CSS for Full Background Image and Transparent Containers
 st.markdown("""
