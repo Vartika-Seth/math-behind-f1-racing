@@ -48,7 +48,7 @@ with col2:
     st.subheader("📊 Lap Time Comparison")
     st.write("🔹 Table comparing predicted lap time with real F1 records.")  # To be implemented
 
-st.subheader("🚗 Animated Lap Simulation (Coming Soon)")
+st.subheader("🚗 Animated Lap Simulation")
 st.write("🏎️ Lap animation will be displayed here.")
 
 st.subheader("🛠️ Pit Stop Impact Calculator (Coming Soon)")
@@ -85,6 +85,8 @@ if st.sidebar.button("Simulate Lap"):
     predicted_time = predict_lap_time(fuel_load, tire_wear, weather, track)
     lap_time_placeholder.write(f"🏁 **Predicted Lap Time:** {predicted_time} seconds")
 
+    # Run the animation
+    animate_lap(predicted_time)
 
 # Custom CSS for Full Background Image and Transparent Containers
 st.markdown("""
@@ -107,6 +109,38 @@ st.markdown("""
     }
     </style>
     """, unsafe_allow_html=True)
+
+import numpy as np
+import matplotlib.pyplot as plt
+import time
+
+# --- Function to Simulate a Lap ---
+def animate_lap(predicted_time):
+    st.subheader("🏎️ Lap Simulation")
+
+    # Simulated track (Circle Path for Simplicity)
+    theta = np.linspace(0, 2 * np.pi, 100)
+    x = np.cos(theta)
+    y = np.sin(theta)
+
+    fig, ax = plt.subplots()
+    ax.plot(x, y, 'gray', linewidth=2)  # Track outline
+    car_dot, = ax.plot([], [], 'ro', markersize=8)  # Red dot = F1 Car
+
+    ax.set_xlim(-1.2, 1.2)
+    ax.set_ylim(-1.2, 1.2)
+    ax.set_xticks([])
+    ax.set_yticks([])
+    ax.set_title("Lap Simulation")
+
+    # Show animation frame by frame
+    frame_time = predicted_time / len(theta)  # Adjust speed based on lap time
+    for i in range(len(theta)):
+        car_dot.set_data(x[i], y[i])
+        ax.figure.canvas.draw()
+        time.sleep(frame_time / 10)  # Reduce time for Streamlit compatibility
+        st.pyplot(fig)
+
 
 # Title and Description
 st.title("Math Behind F1 Racing: The Fastest Lap")
