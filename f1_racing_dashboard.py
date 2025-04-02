@@ -48,10 +48,10 @@ with col2:
     st.subheader("📊 Lap Time Comparison")
     st.write("🔹 Table comparing predicted lap time with real F1 records.")  # To be implemented
 
-st.subheader("🚗 Animated Lap Simulation")
-st.write("🏎️ Lap animation will be displayed here.")
+st.subheader("🚗 Animated Lap Simulation ")
+st.write("🏎️ Lap animation will be displayed")
 
-st.subheader("🛠️ Pit Stop Impact Calculator (Coming Soon)")
+st.subheader("🛠️ Pit Stop Impact Calculator ")
 st.write("⏱️ Graph showing time lost/gained due to pit stops.")
 
 # --- Function to Predict Lap Time ---
@@ -110,8 +110,6 @@ st.markdown("""
     </style>
     """, unsafe_allow_html=True)
 
-import numpy as np
-import matplotlib.pyplot as plt
 import time
 
 # --- Function to Simulate a Lap ---
