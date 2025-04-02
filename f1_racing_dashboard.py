@@ -31,7 +31,11 @@ st.title("🏎️ F1 Racing Dashboard – Fastest Lap Calculator")
 
 # --- SIDEBAR: USER INPUTS ---
 st.sidebar.header("🔧 Simulation Settings")
-track = st.sidebar.selectbox("Select Track", ["Monza", "Silverstone", "Spa", "Suzuka"])
+track = st.sidebar.selectbox(
+    "Select Track", 
+    ["Monza", "Silverstone", "Spa", "Suzuka"], 
+    key="track_selection"  # Unique key to avoid duplication
+)
 fuel_load = st.sidebar.slider("Fuel Load (kg)", min_value=10, max_value=110, step=5, value=50)
 tire_wear = st.sidebar.slider("Tire Wear (%)", min_value=0, max_value=100, step=5, value=20)
 weather = st.sidebar.selectbox("Weather Conditions", ["Sunny", "Cloudy", "Wet"])
@@ -71,8 +75,11 @@ def predict_lap_time(fuel_load, tire_wear, weather, track):
 st.title("🏎️ F1 Racing Dashboard – Fastest Lap Calculator")
 
 # Sidebar Inputs
-st.sidebar.header("🔧 Simulation Settings")
-track = st.sidebar.selectbox("Select Track", ["Monza", "Silverstone", "Spa", "Suzuka"])
+st.sidebar.header("🔧 Simulation Settings")track = st.sidebar.selectbox(
+    "Select Track", 
+    ["Monza", "Silverstone", "Spa", "Suzuka"], 
+    key="track_selection"  # Unique key to avoid duplication
+)
 fuel_load = st.sidebar.slider("Fuel Load (kg)", min_value=10, max_value=110, step=5, value=50)
 tire_wear = st.sidebar.slider("Tire Wear (%)", min_value=0, max_value=100, step=5, value=20)
 weather = st.sidebar.selectbox("Weather Conditions", ["Sunny", "Cloudy", "Wet"])
