@@ -5,6 +5,59 @@ import numpy as np
 import matplotlib.animation as animation
 import tempfile
 
+# --- PAGE CONFIGURATION ---
+st.set_page_config(page_title="F1 Racing Dashboard", layout="wide")
+
+# --- CUSTOM STYLE ---
+st.markdown("""
+    <style>
+        .main {
+            background-color: #1E1E1E;
+            color: white;
+        }
+        .sidebar .sidebar-content {
+            background-color: #121212;
+            color: white;
+        }
+        h1 {
+            color: #E10600;
+            text-align: center;
+        }
+    </style>
+    """, unsafe_allow_html=True)
+
+# --- DASHBOARD TITLE ---
+st.title("🏎️ F1 Racing Dashboard – Fastest Lap Calculator")
+
+# --- SIDEBAR: USER INPUTS ---
+st.sidebar.header("🔧 Simulation Settings")
+track = st.sidebar.selectbox("Select Track", ["Monza", "Silverstone", "Spa", "Suzuka"])
+fuel_load = st.sidebar.slider("Fuel Load (kg)", min_value=10, max_value=110, step=5, value=50)
+tire_wear = st.sidebar.slider("Tire Wear (%)", min_value=0, max_value=100, step=5, value=20)
+weather = st.sidebar.selectbox("Weather Conditions", ["Sunny", "Cloudy", "Wet"])
+
+# --- MAIN DASHBOARD SECTIONS ---
+col1, col2 = st.columns(2)
+
+with col1:
+    st.subheader("🏁 Predicted Fastest Lap Time")
+    lap_time_placeholder = st.empty()  # Placeholder for AI-predicted lap time (to be implemented)
+    st.write("⏳ AI model will generate the lap time based on selected parameters.")
+
+with col2:
+    st.subheader("📊 Lap Time Comparison")
+    st.write("🔹 Table comparing predicted lap time with real F1 records.")  # To be implemented
+
+st.subheader("🚗 Animated Lap Simulation (Coming Soon)")
+st.write("🏎️ Lap animation will be displayed here.")
+
+st.subheader("🛠️ Pit Stop Impact Calculator (Coming Soon)")
+st.write("⏱️ Graph showing time lost/gained due to pit stops.")
+
+# --- RUN THE APP ---
+# Save this file as `f1_dashboard.py` and run:
+# streamlit run f1_dashboard.py
+
 # Custom CSS for Full Background Image and Transparent Containers
 st.markdown("""
     <style>
