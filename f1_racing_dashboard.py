@@ -37,9 +37,9 @@ def predict_lap_time(fuel, tire, weather, track):
 track_images_path = "track_images"
 track_layouts = {
     "Monza": os.path.join(track_images_path, "monza.png"),
-    "Silverstone": os.path.join(track_images_path, "silverstone.png"),
-    "Spa": os.path.join(track_images_path, "spa.png"),
-    "Suzuka": os.path.join(track_images_path, "suzuka.png")
+    "Silverstone": os.path.join(track_images_path, "Silverstone.png"),
+    "Spa": os.path.join(track_images_path, "Spa.png"),
+    "Suzuka": os.path.join(track_images_path, "Suzuka.png")
 }
 
 # ---------------------------- Animated Lap Simulation ----------------------------
