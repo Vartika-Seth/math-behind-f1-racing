@@ -34,6 +34,7 @@ def predict_lap_time(fuel, tire, weather, track):
     return round(predicted_time, 2)
 
 # ---------------------------- Track Layouts Data (Local Images) ----------------------------
+import os
 track_images_path = os.path.join(os.getcwd(), "track_images")
 
 track_layouts = {
