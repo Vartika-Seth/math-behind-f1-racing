@@ -2,6 +2,7 @@ import streamlit as st
 import numpy as np
 import matplotlib.pyplot as plt
 import time
+import os
 
 # ---------------------------- UI Sidebar - Inputs ----------------------------
 st.sidebar.header("🔧 Simulation Settings")
@@ -32,18 +33,21 @@ def predict_lap_time(fuel, tire, weather, track):
     predicted_time = base_lap_time[track] + fuel_penalty + tire_penalty + weather_penalty
     return round(predicted_time, 2)
 
-# ---------------------------- Track Layouts Data ----------------------------
+# ---------------------------- Track Layouts Data (Local Images) ----------------------------
+track_images_path = "track_images"
 track_layouts = {
-    "Monza": "https://upload.wikimedia.org/wikipedia/commons/e/ec/Monza_track_map.svg",
-    "Silverstone": "https://upload.wikimedia.org/wikipedia/commons/3/3a/Silverstone_Circuit_2020.png",
-    "Spa": "https://upload.wikimedia.org/wikipedia/commons/thumb/6/6e/Circuit_Spa_2010.png/1024px-Circuit_Spa_2010.png",
-    "Suzuka": "https://upload.wikimedia.org/wikipedia/commons/6/6a/Suzuka_circuit_map.png"
+    "Monza": os.path.join(track_images_path, "monza.png"),
+    "Silverstone": os.path.join(track_images_path, "silverstone.png"),
+    "Spa": os.path.join(track_images_path, "spa.png"),
+    "Suzuka": os.path.join(track_images_path, "suzuka.png")
 }
 
 # ---------------------------- Animated Lap Simulation ----------------------------
 def animate_lap(predicted_time, track):
     """Simulates a lap animation on the selected track."""
     fig, ax = plt.subplots(figsize=(6, 4))
+    
+    # Load local track image
     track_img = plt.imread(track_layouts[track])
 
     ax.imshow(track_img, extent=[0, 10, 0, 6])
@@ -63,7 +67,7 @@ if st.sidebar.button("🏁 Simulate Lap"):
     lap_time_placeholder.write(f"🏎️ **Predicted Lap Time:** {predicted_time} seconds")
 
     # Display selected track layout
-    st.image(track_layouts[track], caption=f"{track} Circuit Layout", use_container_width=True)
+    st.image(track_layouts[track], caption=f"{track} Circuit Layout", use_column_width=True)
 
     # Run Lap Animation
     animate_lap(predicted_time, track)
