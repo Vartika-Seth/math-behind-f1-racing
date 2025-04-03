@@ -37,26 +37,23 @@ def predict_lap_time(fuel, tire, weather, track):
 import os
 import streamlit as st
 
-# Get the absolute path of the track_images folder
-track_images_path = os.path.abspath("track_images")
-
-# Define the paths for each track image
+# Define the paths for each track image (saved in the main project folder)
 track_layouts = {
-    "Monza": os.path.join(track_images_path, "monza.png"),
-    "Silverstone": os.path.join(track_images_path, "Silverstone.png"),
-    "Spa": os.path.join(track_images_path, "Spa.png"),
-    "Suzuka": os.path.join(track_images_path, "Suzuka.png")
+    "Monza": "monza.png",
+    "Silverstone": "Silverstone.png",
+    "Spa": "Spa.png",
+    "Suzuka": "Suzuka.png"
 }
 
 # Debugging: Print the actual paths
 st.write("🔍 Checking track image paths:")
 for track, path in track_layouts.items():
-    st.write(f"{track} image path:", path)
+    st.write(f"{track} image path:", os.path.abspath(path))
     if not os.path.exists(path):
         st.write(f"❌ ERROR: {track} image not found at {path}")
 
 # Example: Display Monza track to check
-st.image(track_layouts["Monza"], caption="Monza Track Layout", use_column_width=True)
+st.image(track_layouts["Monza"], caption="Monza Track Layout", use_container_width=True)
 
 # ---------------------------- Animated Lap Simulation ----------------------------
 def animate_lap(predicted_time, track):
