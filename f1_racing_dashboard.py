@@ -35,13 +35,16 @@ def predict_lap_time(fuel, tire, weather, track):
 
 # ---------------------------- Track Layouts Data (Local Images) ----------------------------
 import os
-track_images_path = os.path.join(os.getcwd(), "track_images")
 
+# Get the absolute path of the 'track_images' folder
+track_images_path = os.path.abspath("track_images")
+
+# Define the paths for each track image
 track_layouts = {
     "Monza": os.path.join(track_images_path, "monza.png"),
-    "Silverstone": os.path.join(track_images_path, "silverstone.png"),
-    "Spa": os.path.join(track_images_path, "spa.png"),
-    "Suzuka": os.path.join(track_images_path, "suzuka.png")
+    "Silverstone": os.path.join(track_images_path, "Silverstone.png"),
+    "Spa": os.path.join(track_images_path, "Spa.png"),
+    "Suzuka": os.path.join(track_images_path, "Suzuka.png")
 }
 
 # ---------------------------- Animated Lap Simulation ----------------------------
