@@ -75,7 +75,6 @@ f1_fastest_laps = {
     "Spa": 1.46,           # ~1:46 = 106 sec
     "Suzuka": 1.30         # ~1:30 = 90 sec
 }
-
 if selected_track in f1_fastest_laps and speed > 0:
     real_time = f1_fastest_laps[selected_track]
     st.write(f"🏎️ Fastest Real Lap Time at {selected_track}: **{real_time} minutes**")
@@ -88,5 +87,43 @@ if selected_track in f1_fastest_laps and speed > 0:
             st.info("🎯 Your lap exactly matches the real F1 lap time! Wow!")
         else:
             st.warning(f"⏱️ Your lap is **{diff} minutes slower** than the real F1 record. Try increasing your speed!")
+
+#AI-Based Lap Time Prediction (Simple Linear Regression Model)
+
+
+from sklearn.linear_model import LinearRegression
+import pandas as pd
+
+st.subheader("🤖 AI-Based Lap Time Prediction")
+
+# Simulated past data (Speed in km/h, Lap Time in minutes)
+sample_data = {
+    "Monza": [(180, 1.5), (200, 1.3), (220, 1.2), (240, 1.1)],
+    "Silverstone": [(180, 1.6), (200, 1.4), (220, 1.3), (240, 1.2)],
+    "Spa": [(180, 1.8), (200, 1.6), (220, 1.5), (240, 1.4)],
+    "Suzuka": [(180, 1.7), (200, 1.5), (220, 1.4), (240, 1.3)],
+}
+
+# Get data for selected track
+data = sample_data[selected_track]
+df = pd.DataFrame(data, columns=["Speed", "LapTime"])
+
+# Train simple linear regression model
+model = LinearRegression()
+model.fit(df[["Speed"]], df["LapTime"])
+
+# Predict lap time from user speed
+predicted_time = model.predict([[speed]])[0]
+st.write(f"🧠 Predicted Lap Time (AI Model): **{round(predicted_time, 2)} minutes**")
+
+# Comparison with user lap
+if 'result' in locals() and isinstance(result, (int, float)):
+    ai_diff = round(result - predicted_time, 2)
+    if ai_diff < 0:
+        st.success(f"🚀 You're faster than AI's prediction by {abs(ai_diff)} minutes!")
+    elif ai_diff > 0:
+        st.warning(f"📉 You're {ai_diff} minutes slower than AI's prediction. Try increasing speed!")
+    else:
+        st.info("🤝 Your time exactly matches the AI prediction!")
 
 
