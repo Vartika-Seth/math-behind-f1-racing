@@ -153,59 +153,37 @@ if adjusted_lap_time:
             st.info("🤖 Your adjusted lap equals AI’s prediction even with pit stops!")
 
 from fpdf import FPDF
-import datetime
+import streamlit as st
 
-def generate_pdf(track, distance, speed, lap_time, real_time, predicted, pit_stops, pit_time, adjusted):
+# PDF Generator
+def generate_lap_pdf(track, speed, lap_time, predicted_time=None):
     pdf = FPDF()
     pdf.add_page()
-    pdf.set_font("Arial", size=12)
+    pdf.set_font("Arial", 'B', 16)
+    pdf.cell(0, 10, "F1 Fastest Lap Report", ln=True, align="C")
 
-    pdf.cell(200, 10, txt="🏁 F1 Fastest Lap Summary Report", ln=True, align='C')
+    pdf.set_font("Arial", '', 12)
     pdf.ln(10)
+    pdf.cell(0, 10, f"Track Selected: {track}", ln=True)
+    pdf.cell(0, 10, f"Average Speed Entered: {speed} km/h", ln=True)
+    pdf.cell(0, 10, f"Calculated Lap Time: {lap_time} seconds", ln=True)
 
-    pdf.cell(200, 10, txt=f"Date: {datetime.date.today()}", ln=True)
-
-    pdf.ln(5)
-    pdf.cell(200, 10, txt=f"Track Selected: {track}", ln=True)
-    pdf.cell(200, 10, txt=f"Track Distance: {distance} km", ln=True)
-    pdf.cell(200, 10, txt=f"Input Speed: {speed} km/h", ln=True)
-
-    pdf.ln(5)
-    pdf.cell(200, 10, txt=f"Calculated Lap Time: {round(lap_time, 2)} min", ln=True)
-    pdf.cell(200, 10, txt=f"Real Fastest Lap Time: {real_time} min", ln=True)
-    pdf.cell(200, 10, txt=f"AI-Predicted Lap Time: {round(predicted, 2)} min", ln=True)
-
-    pdf.ln(5)
-    pdf.cell(200, 10, txt=f"Pit Stops: {pit_stops}", ln=True)
-    pdf.cell(200, 10, txt=f"Pit Stop Duration (each): {pit_time} min", ln=True)
-    pdf.cell(200, 10, txt=f"Adjusted Lap Time: {round(adjusted, 2)} min", ln=True)
+    if predicted_time:
+        pdf.cell(0, 10, f"AI Predicted Lap Time: {predicted_time:.2f} seconds", ln=True)
 
     pdf.ln(10)
-    pdf.cell(200, 10, txt="Thanks for using the F1 Lap Time Dashboard! 🏎️", ln=True)
+    pdf.set_font("Arial", 'I', 10)
+    pdf.multi_cell(0, 10, "Note: This report is based on user input and simulation models. It is not an official race analysis.")
 
-    filename = f"lap_summary_{track.lower()}_{datetime.date.today()}.pdf"
-    pdf.output(filename)
-    return filename
+    # Save PDF to a temporary location
+    pdf_output_path = "/tmp/lap_summary.pdf"
+    pdf.output(pdf_output_path)
 
-if st.button("📥 Download Lap Summary as PDF"):
-    if 'result' in locals() and 'predicted_time' in locals() and 'adjusted_lap_time' in locals():
-        pdf_file = generate_pdf(
-            selected_track,
-            track_distances[selected_track],
-            speed,
-            result,
-            f1_fastest_laps[selected_track],
-            predicted_time,
-            pit_stops,
-            pit_duration,
-            adjusted_lap_time
-        )
-        with open(pdf_file, "rb") as file:
-            st.download_button(
-                label="📄 Click here to download your summary",
-                data=file,
-                file_name=pdf_file,
-                mime="application/pdf"
-            )
-    else:
-        st.error("❗Please calculate lap time before downloading the summary.")
+    return pdf_output_path
+
+# Button to trigger generation & download
+if st.button("Download Lap Summary as PDF"):
+    pdf_file = generate_lap_pdf(track_selected, speed_input, lap_time, predicted_time)
+    
+    with open(pdf_file, "rb") as f:
+        st.download_button("📥 Click here to download your Lap Summary", f, file_name="Lap_Summary.pdf")
