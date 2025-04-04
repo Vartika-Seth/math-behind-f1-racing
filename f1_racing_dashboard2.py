@@ -88,8 +88,8 @@ if selected_track in f1_fastest_laps and speed > 0:
         else:
             st.warning(f"⏱️ Your lap is **{diff} minutes slower** than the real F1 record. Try increasing your speed!")
 
-#AI-Based Lap Time Prediction (Simple Linear Regression Model)
 
+#AI-Based Lap Time Prediction (Simple Linear Regression Model)
 
 from sklearn.linear_model import LinearRegression
 import pandas as pd
