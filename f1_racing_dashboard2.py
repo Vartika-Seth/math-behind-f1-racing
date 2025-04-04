@@ -126,4 +126,29 @@ if 'result' in locals() and isinstance(result, (int, float)):
     else:
         st.info("🤝 Your time exactly matches the AI prediction!")
 
+#Pit stop impact calculator
+
+st.subheader("🔧 Pit Stop Impact Calculator")
+
+# Input pit stop details
+pit_stops = st.number_input("Enter number of pit stops", min_value=0, value=1, step=1)
+pit_duration = st.number_input("Average time per pit stop (in minutes)", min_value=0.0, value=0.3, step=0.1)
+
+# Calculate impact
+total_pit_time = pit_stops * pit_duration
+adjusted_lap_time = result + total_pit_time if 'result' in locals() and isinstance(result, (int, float)) else None
+
+if adjusted_lap_time:
+    st.write(f"⏱️ Additional Pit Time: **{round(total_pit_time, 2)} minutes**")
+    st.success(f"🛠️ Adjusted Lap Time including pit stops: **{round(adjusted_lap_time, 2)} minutes**")
+
+    # Comparison again
+    if 'predicted_time' in locals():
+        adjusted_vs_ai = round(adjusted_lap_time - predicted_time, 2)
+        if adjusted_vs_ai < 0:
+            st.success(f"✅ Even with pit stops, you're {abs(adjusted_vs_ai)} min faster than AI prediction!")
+        elif adjusted_vs_ai > 0:
+            st.warning(f"⚠️ You're now {adjusted_vs_ai} min slower than AI prediction due to pit stops.")
+        else:
+            st.info("🤖 Your adjusted lap equals AI’s prediction even with pit stops!")
 
