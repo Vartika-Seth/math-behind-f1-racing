@@ -146,9 +146,19 @@ if adjusted_lap_time:
         else:
             st.info("🤖 Your adjusted lap matches AI prediction!")
 
-# --- PDF Download Button ---
+# PDF Download Section
 if 'result' in locals() and isinstance(result, (int, float)):
-    if st.button("📝 Generate PDF Summary"):
+    st.subheader("📝 Export Lap Summary")
+
+    # Generate PDF only when button clicked
+    if st.button("📄 Generate PDF"):
         pdf_path = generate_lap_summary_pdf(selected_track, speed, result)
+
+        # After generating, show download button
         with open(pdf_path, "rb") as f:
-            st.download_button("📄 Download Lap Summary PDF", f, file_name="lap_summary.pdf")
+            st.download_button(
+                label="⬇️ Download Lap Summary PDF",
+                data=f,
+                file_name="lap_summary.pdf",
+                mime="application/pdf"
+            )
