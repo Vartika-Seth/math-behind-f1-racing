@@ -26,6 +26,12 @@ def generate_lap_summary_pdf(track_name, speed, lap_time):
     output_path = "lap_summary.pdf"
     pdf.output(output_path)
     return output_path
+# Save PDF to Bytes (not to disk)
+    import io
+    pdf_output = io.BytesIO()
+    pdf.output(pdf_output)
+    pdf_output.seek(0)
+    return pdf_output
 
 # --- Track Layouts (Ensure images are present in your folder) ---
 track_layouts = {
@@ -150,15 +156,15 @@ if adjusted_lap_time:
 if 'result' in locals() and isinstance(result, (int, float)):
     st.subheader("📝 Export Lap Summary")
 
-    # Generate PDF only when button clicked
-    if st.button("📄 Generate PDF"):
-        pdf_path = generate_lap_summary_pdf(selected_track, speed, result)
+    # Generate PDF when user clicks
+    if st.button("📄 Generate PDF Summary"):
+        pdf_data = generate_lap_summary_pdf(selected_track, speed, result)
 
-        # After generating, show download button
-        with open(pdf_path, "rb") as f:
-            st.download_button(
-                label="⬇️ Download Lap Summary PDF",
-                data=f,
-                file_name="lap_summary.pdf",
-                mime="application/pdf"
-            )
+        # Display Download Button
+        st.download_button(
+            label="⬇️ Download Lap Summary PDF",
+            data=pdf_data,
+            file_name="lap_summary.pdf",
+            mime="application/pdf"
+        )
+
